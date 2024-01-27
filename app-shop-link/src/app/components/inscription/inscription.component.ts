@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
-import { ApiSymfonyService } from '../../services/api-symfony.service';
 import { User } from '../../models/User';
+import { ApiSymfonyService } from '../../services/api-symfony.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-connexion',
-  templateUrl: './connexion.component.html',
-  styleUrl: './connexion.component.scss'
+  selector: 'app-inscription',
+  templateUrl: './inscription.component.html',
+  styleUrl: './inscription.component.scss'
 })
-export class ConnexionComponent {
+export class InscriptionComponent {
   constructor(private api:ApiSymfonyService,private router:Router){}
   form:any={
     pseudo: null,
@@ -22,14 +22,15 @@ export class ConnexionComponent {
       	  //erreur a traiter  
       }else{  
         let user = new User(this.form.pseudo,this.form.password);
-        this.api.postUser(user).subscribe(data=>{
+        this.api.inscription(user).subscribe(data=>{
          const myJson = JSON.stringify(data);
          const myObj = JSON.parse(myJson);
           console.log(myObj.requete)
           if(myObj.requete==false){
+            //this.router.navigate(['/connexion'])
             console.log("aucun user present")
           }else{
-              this.router.navigate(['/article'])
+             console.log("user present") 
           }
         })
           

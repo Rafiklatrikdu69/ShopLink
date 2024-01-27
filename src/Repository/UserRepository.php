@@ -45,4 +45,13 @@ class UserRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+    public function findPassword($value): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.password = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
