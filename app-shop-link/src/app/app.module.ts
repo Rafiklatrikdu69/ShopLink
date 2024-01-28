@@ -12,6 +12,8 @@ import { InscriptionComponent } from './components/inscription/inscription.compo
 import { DialogArticleComponent } from './components/dialog-article/dialog-article.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import {MatButtonModule} from '@angular/material/button';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatTableModule} from '@angular/material/table';
 import {
   MatDialog,
   MAT_DIALOG_DATA,
@@ -41,7 +43,9 @@ import {
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
-    MatButtonModule
+    MatButtonModule,
+    MatTableModule,
+    MatPaginatorModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
   providers: [
