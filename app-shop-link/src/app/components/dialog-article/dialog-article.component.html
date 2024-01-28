@@ -1,0 +1,14 @@
+<div>
+    <form #f="ngForm" name="form">
+      <label for="">Nom du produit</label>
+      <input type="text" [(ngModel)]="f.value.name" name="name" #name="ngModel">
+      <label for="">Type</label>
+      <input type="text" [(ngModel)]="f.value.type" name="type" #name="ngModel">
+      <label for="">Stock</label>
+      <input type="number" [(ngModel)]="f.value.stock" name="stock" #name="ngModel">
+      <label for="">Prix</label>
+      <input type="number" [(ngModel)]="f.value.prix" name="prix" #name="ngModel">
+      <button mat-button [mat-dialog-close] (click)="click(f.value.name,f.value.type,f.value.stock,f.value.prix)" cdkFocusInitial>Ok</button>
+    </form>
+  </div>
+  
