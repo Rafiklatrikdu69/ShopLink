@@ -21,8 +21,8 @@ class AdminController extends AbstractController
             'path' => 'src/Controller/AdminController.php',
         ]);
     }
-
-    #[Route('/insert-article', name: 'app_admin')]
+    
+    #[Route('/insert-article', name: 'insert-article')]
     public function insert(Request $request,EntityManagerInterface $entityManager): JsonResponse
     {
         try {
@@ -41,41 +41,106 @@ class AdminController extends AbstractController
             return new JsonResponse(['requete' => true]);
             
         } catch (\Exception $e) {
-         
+            
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-// ... (previous code)
+    
+    
+    #[Route('/del-article', name: 'del-article')] 
+    public function deleteSuppr(Request $request,EntityManagerInterface $entityManager): JsonResponse
+    {
+        try {
+            $responseData = json_decode($request->getContent(), true);
+           
+            
+            
+            $data = [];
+           
+            foreach ($responseData as $row) {
+                $entityManager->createQueryBuilder()
+                ->delete(Article::class, 'a')
+                ->where('a.id = :id')
+                ->setParameter('id', $row['id'])
+                ->getQuery()
+                ->execute();
+                
+               
+            }
 
-#[Route('/get-article', name: 'app_get_articles')] // Fix the route name
-public function getAllProduct(ManagerRegistry $entityManager): JsonResponse
-{
-    try {
-        // Retrieve all products
-        $productRepository = $entityManager->getRepository(Article::class);
-        $products = $productRepository->findAll();
-
-        $data = [];
-        foreach ($products as $row) {
-            $productattr = [
-                'nom' => $row->getNom(),
-                'type' => $row->getType(),
-                'stock' => $row->getStock(),
-                'prix' => $row->getPrix(),
-            ];
-
-            $data[] = $productattr;
+            
+            
+            
+            
+            return new JsonResponse(['products' => $data]);
+            
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        if (!$products) {
-            return new JsonResponse(['error' => "Aucune données"]);
-        }
-
-        return new JsonResponse(['products' => $data]);
-
-    } catch (\Exception $e) {
-        return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
-}
+    #[Route('/get-article', name: 'app_get_articles')] // Fix the route name
+    public function getAllProducts(ManagerRegistry $entityManager): JsonResponse
+    {
+        try {
+            
+            $productRepository = $entityManager->getRepository(Article::class);
+            $products = $productRepository->findAll();
+            
+            $data = [];
+            foreach ($products as $row) {
+                $productattr = [
+                    'id'=>$row->getId(),
+                    'nom' => $row->getNom(),
+                    'type' => $row->getType(),
+                    'stock' => $row->getStock(),
+                    'prix' => $row->getPrix(),
+                ];
+                
+                $data[] = $productattr;
+            }
+            
+            if (!$products) {
+                return new JsonResponse(['error' => "Aucune données"]);
+            }
+            
+            return new JsonResponse(['products' => $data]);
+            
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    #[Route('/get-last-id', name: 'app_id')] // Fix the route name
+    public function getLastId(EntityManagerInterface $entityManager): JsonResponse
+    {
+        try {
+            
+          
+           
+
+
+          
+            $data = $entityManager->createQueryBuilder()
+            ->select('a') 
+            ->from(Article::class, 'a')
+            ->orderBy('a.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+
+            $productattr = [
+                'id'=>$data->getId(),
+            ];
+            
+            $donnes[] = $productattr;
+        
+        return new JsonResponse(['data' => $donnes]);
+                   
+            
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    
 }

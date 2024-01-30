@@ -17,4 +17,14 @@ export class ArticleApiService {
   getAllProduct(){
     return this.http.get<any>(this.url+"get-article");
   }
+
+  deleteProduct(arr:any[]){
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(this.url+"del-article",JSON.stringify(arr),{ headers, responseType: "json", withCredentials: false });
+
+  }
+
+  getLastId(){
+    return this.http.get<any>(this.url+"get-last-id",{withCredentials:false})
+  }
 }
