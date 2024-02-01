@@ -87,6 +87,9 @@ class AdminController extends AbstractController
             $products = $productRepository->findAll();
             
             $data = [];
+            if (!$products) {
+                return new JsonResponse(['data' => null]);
+            }
             foreach ($products as $row) {
                 $productattr = [
                     'id'=>$row->getId(),
@@ -98,11 +101,6 @@ class AdminController extends AbstractController
                 
                 $data[] = $productattr;
             }
-            
-            if (!$products) {
-                return new JsonResponse(['error' => "Aucune données"]);
-            }
-            
             return new JsonResponse(['products' => $data]);
             
         } catch (\Exception $e) {
@@ -114,12 +112,7 @@ class AdminController extends AbstractController
     public function getLastId(EntityManagerInterface $entityManager): JsonResponse
     {
         try {
-            
-          
-           
-
-
-          
+         
             $data = $entityManager->createQueryBuilder()
             ->select('a') 
             ->from(Article::class, 'a')
@@ -128,14 +121,20 @@ class AdminController extends AbstractController
             ->getQuery()
             ->getOneOrNullResult();
 
-
+            if(!$data){
+                return new JsonResponse(['data' => null]);
+            }
             $productattr = [
                 'id'=>$data->getId(),
             ];
             
             $donnes[] = $productattr;
+            if($data){
+                return new JsonResponse(['data' => $donnes]);
+            }
+           
         
-        return new JsonResponse(['data' => $donnes]);
+       
                    
             
         } catch (\Exception $e) {
